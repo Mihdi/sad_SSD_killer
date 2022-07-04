@@ -50,6 +50,8 @@ int main(int argc, char const *argv[])
 		std::cout << "(" << i->first << ", " << i->second << ')' << std::endl;
 	}
 
+	std::cout << mul_vec(&q_out, &q_out) << std::endl;
+
     //cleanup
     delete q_28143;
 	delete features;
