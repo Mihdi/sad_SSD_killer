@@ -8,6 +8,7 @@
 #include "item.hpp"
 #include "parse.hpp"
 #include "q_vector.hpp"
+#include "mul_vec.hpp"
 
 void print_items(std::map<int, Item> *items){
 	for (auto i = items->begin(); i != items->end(); ++i)
@@ -42,9 +43,23 @@ int main(int argc, char const *argv[])
 	auto q_vec_handler = Q_vector<EPSILON>("qs/q_");
 	q_vec_handler.save(0, q_28143);
 
+	// auto q = new std::map<int, float>;
+	// auto p = new std::map<int, float>;
+	// q->emplace(std::make_pair(1, 1));
+	// q->emplace(std::make_pair(2, 1000));
+	// q->emplace(std::make_pair(4, 10));
+	// p->emplace(std::make_pair(1, 1));
+	// p->emplace(std::make_pair(3, 100));
+	// p->emplace(std::make_pair(4, 0.1f));
+
+
+	// std::cout << mul_vec(q, p) << std::endl;
+
     //cleanup
 	delete features;
 	delete items;
+	// delete p;
+	// delete q;
 
 	return 0;
 }
