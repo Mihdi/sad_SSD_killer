@@ -7,7 +7,7 @@
 #include "feature.hpp"
 #include "item.hpp"
 #include "parse.hpp"
-#include "q_vector.hpp"
+#include "vector_handler.hpp"
 
 void print_items(std::map<int, Item> *items){
 	for (auto i = items->begin(); i != items->end(); ++i)
@@ -39,7 +39,7 @@ int main(int argc, char const *argv[])
 
 	auto item_28143 = items->find(28143);
 	auto q_28143 = item_28143->second.convert_to_vector(features);
-	auto q_vec_handler = Q_vector<EPSILON>("qs/q_");
+	auto q_vec_handler = VectorHandler<EPSILON>("qs/q_");
 	q_vec_handler.save(0, q_28143);
 	std::map<int, float> q_out;
 	q_vec_handler.load(0, &q_out);

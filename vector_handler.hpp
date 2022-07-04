@@ -1,12 +1,12 @@
 #pragma once
-#ifndef Q_VECTOR
-#define Q_VECTOR
+#ifndef VECTOR_HANDLER
+#define VECTOR_HANDLER
 #include <string>
 #include <fstream>
 #include <vector>
 
 template<float EPSILON>
-class Q_vector
+class VectorHandler
 {
 private:
 	static constexpr float LOWER_BOUND = -1 * EPSILON;
@@ -14,13 +14,13 @@ private:
 
 	std::string path;
 public:
-	Q_vector(std::string path) :  path(std::move(path)){}
+	VectorHandler(std::string path) :  path(std::move(path)){}
 
 	void save(int index, const std::map<int, float> *qvec){
 		std::ofstream file;
 		file.open(path + std::to_string(index), std::ios::out | std::ios::trunc);
 		if(!file.is_open()){
-			std::cout << "error, could not open file in Q_vector.save" << std::endl;
+			std::cout << "error, could not open file in VectorHandler.save" << std::endl;
 			::exit(1);
 		}
 		bool skip_mode = false;
@@ -42,7 +42,7 @@ public:
 		std::ifstream file;
 		file.open(path + std::to_string(q_index), std::ios::in);
 		if(!file.is_open()){
-			std::cout << "error, could not open file in Q_vector.load" << std::endl;
+			std::cout << "error, could not open file in VectorHandler.load" << std::endl;
 			::exit(1);
 		}
 
@@ -108,7 +108,7 @@ public:
 		//cleanup
 		file.close();
 	}
-	~Q_vector(){}
+	~VectorHandler(){}
 };
 
-#endif //Q_VECTOR
+#endif //VECTOR_HANDLER
