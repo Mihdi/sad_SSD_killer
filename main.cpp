@@ -41,8 +41,16 @@ int main(int argc, char const *argv[])
 	auto q_28143 = item_28143->second.convert_to_vector(features);
 	auto q_vec_handler = Q_vector<EPSILON>("qs/q_");
 	q_vec_handler.save(0, q_28143);
+	std::map<int, float> q_out;
+	q_vec_handler.load(0, &q_out);
+
+	for (auto i = q_out.begin(); i != q_out.end(); ++i)
+	{
+		std::cout << "(" << i->first << ", " << i->second << ')' << std::endl;
+	}
 
     //cleanup
+    delete q_28143;
 	delete features;
 	delete items;
 
