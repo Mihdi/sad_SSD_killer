@@ -29,28 +29,8 @@ public:
 		{
 			const int index = q_i->first;
 			const float component_value = q_i->second;
-
-			if(index != (prev + 1)){ // be careful, I'm assuming no duplicates in qvec
-				file << " $ ";
-				skip_mode = true;
-			}
-
-			if(LOWER_BOUND < component_value && component_value < UPPER_BOUND){
-				if(!skip_mode){
-					file << " $ ";
-					skip_mode = true;
-				}
-				continue;
-			}
-
-			if(skip_mode){
-				file << index;
-				file << ' ';
-				skip_mode = false;
-			}
-
-			file << component_value;
-			file << ' ';
+			file << 'i' << index;
+			file << 'v' << component_value;
 			prev = index;
 		}
 		file << '\n';
@@ -71,74 +51,59 @@ public:
 		std::getline(file, line);
 
 		//parse
+		bool encountered_value = false;
 		float value = 0;
-		float decimal = 0;
-		int decimal_divider = 1;
+		int decimal = 0;
+		double decimal_divider = 1;
 		int index = 0;
 		bool parsing_value = true;
 		bool parsing_decimal = false;
 		bool parsing_index = false; //yeah we could do without this one, but I'm tired and need the explicit-ness
+		
 		for (const char *c = line.c_str(); *c != '\0' && *c != '\n'; ++c)
 		{
 			const char current_char = *c;
-			if(*c == '$'){
-				if(parsing_value){
+			if(*c == 'i'){
+				parsing_index = true;
+				parsing_value = parsing_decimal = false;
+
+				if(!encountered_value){
+					encountered_value = true;
+				} else {
+					float component = decimal / decimal_divider;
+					component += value;
 					q_out->emplace(std::make_pair(index, value));
-					value = 0;
-				} else if(parsing_decimal) {
-					value += decimal * decimal_divider;
-					q_out->emplace(std::make_pair(index, value));
-					value = 0;
-					decimal = 0;
-					decimal_divider = 1;
 				}
 				index = 0;
-				parsing_index = true;
+				value = 0;
+				continue;
+			}
+			if(*c == 'v'){
+				parsing_value = true;
+				parsing_index = parsing_decimal = false;
 				continue;
 			}
 
-			if(*c == ' '){
-				if(parsing_value){
-					q_out->emplace(std::make_pair(index, value));
-					value = 0;
-					index += 1;
-				} else if(parsing_decimal){
-					value += decimal * decimal_divider;
-					q_out->emplace(std::make_pair(index, value));
-					value = 0;
-					decimal = 0;
-					decimal_divider = 1;
-					index += 1;
-				} else if(parsing_index){
-					parsing_index = false;
-					parsing_value = true;
-				}
-				continue;
-			}
-
-			if(*c == '.' && parsing_value){
-				parsing_value = false;
+			if(*c == '.'){
 				parsing_decimal = true;
-				decimal = 0;
-				decimal_divider = 1;
-				continue;
+				parsing_value = parsing_index = false;
+				continue;	
 			}
 
-			if('0' <= current_char && current_char <= '9'){
-				auto current_value = current_char - '0';
-				if (parsing_value){
-					value *= 10;
-					value += current_value;
-				} else if (parsing_decimal){
-					decimal *= 10;
-					decimal += current_value;
-					decimal_divider *= 10;
-				} else if (parsing_index) {
-					index *= 10;
-					index += current_value;
-				}
+			auto current_digit = current_char - '0';
+			if(parsing_value){
+				value *= 10;
+				value += current_digit;
+			} else if(parsing_decimal){
+				decimal *= 10;
+				decimal += current_digit;
+				decimal_divider *= 10;
+			} else if(parsing_index){
+				index *= 10;
+				index += current_digit;
 			}
 		}
+		q_out->emplace(std::make_pair(index, value + decimal / decimal_divider));
 
 		//cleanup
 		file.close();
