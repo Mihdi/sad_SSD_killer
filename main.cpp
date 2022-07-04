@@ -22,6 +22,8 @@ void print_items(std::map<int, Item> *items){
 
 int main(int argc, char const *argv[])
 {
+	constexpr float EPSILON = 0;
+
 	//try checking if given file
 	if(argc < 2){
 		std::cout << "please give a filename" << std::endl;
@@ -34,6 +36,11 @@ int main(int argc, char const *argv[])
 	
 	//actual parsing
 	if(parse(argv[1], features, items)){ return 1; }
+
+	auto item_28143 = items->find(28143);
+	auto q_28143 = item_28143->second.convert_to_vector(features);
+	auto q_vec_handler = Q_vector<EPSILON>("qs/q_");
+	q_vec_handler.save(0, q_28143);
 
     //cleanup
 	delete features;
