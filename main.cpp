@@ -7,8 +7,8 @@
 #include "feature.hpp"
 #include "item.hpp"
 #include "parse.hpp"
-#include "q_vector.hpp"
 #include "mul_vec.hpp"
+#include "vector_handler.hpp"
 
 void print_items(std::map<int, Item> *items){
 	for (auto i = items->begin(); i != items->end(); ++i)
@@ -40,26 +40,20 @@ int main(int argc, char const *argv[])
 
 	auto item_28143 = items->find(28143);
 	auto q_28143 = item_28143->second.convert_to_vector(features);
-	auto q_vec_handler = Q_vector<EPSILON>("qs/q_");
+	auto q_vec_handler = VectorHandler<EPSILON>("qs/q_");
 	q_vec_handler.save(0, q_28143);
+	std::map<int, float> q_out;
+	q_vec_handler.load(0, &q_out);
 
-	// auto q = new std::map<int, float>;
-	// auto p = new std::map<int, float>;
-	// q->emplace(std::make_pair(1, 1));
-	// q->emplace(std::make_pair(2, 1000));
-	// q->emplace(std::make_pair(4, 10));
-	// p->emplace(std::make_pair(1, 1));
-	// p->emplace(std::make_pair(3, 100));
-	// p->emplace(std::make_pair(4, 0.1f));
-
-
-	// std::cout << mul_vec(q, p) << std::endl;
+	for (auto i = q_out.begin(); i != q_out.end(); ++i)
+	{
+		std::cout << "(" << i->first << ", " << i->second << ')' << std::endl;
+	}
 
     //cleanup
+    delete q_28143;
 	delete features;
 	delete items;
-	// delete p;
-	// delete q;
 
 	return 0;
 }
