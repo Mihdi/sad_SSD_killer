@@ -23,15 +23,12 @@ public:
 			std::cout << "error, could not open file in VectorHandler.save" << std::endl;
 			::exit(1);
 		}
-		bool skip_mode = false;
-		int prev = 0;
 		for (auto q_i = qvec->begin(); q_i != qvec->end(); q_i++)
 		{
 			const int index = q_i->first;
 			const float component_value = q_i->second;
 			file << 'i' << index;
 			file << 'v' << component_value;
-			prev = index;
 		}
 		file << '\n';
 		file.close();
