@@ -6,7 +6,9 @@
 
 #include "feature.hpp"
 #include "item.hpp"
-#include "parse.hpp"
+#include "session.hpp"
+#include "parse_items.hpp"
+#include "parse_sessions.hpp"
 #include "mul_vec.hpp"
 #include "vector_handler.hpp"
 
@@ -26,17 +28,27 @@ int main(int argc, char const *argv[])
 	constexpr float EPSILON = 0;
 
 	//try checking if given file
-	if(argc < 2){
-		std::cout << "please give a filename" << std::endl;
+	if(argc < 3){
+		std::cout << "please give a filename for items/features and another for sessions" << std::endl;
 		return 1;
 	}
 	
 	//prepare for parsing
 	auto features = new std::map<std::string, Feature>();
 	auto items = new std::unordered_map<int, Item>();
+	auto sessions = new std::map<int, Session>();
 	
 	//actual parsing
-	if(parse(argv[1], features, items)){ return 1; }
+	if(parse_items(argv[1], features, items)){ return 1; }
+	if(parse_sessions(argv[2], sessions)){ return 1; }
+
+	for(auto i = sessions->begin(); i != sessions->end(); ++i){
+		std::cout << i->first << std::endl;
+		for (auto j = i->second.item_ids.begin(); j != i->second.item_ids.end(); ++j)
+		{
+			std::cout << '\t' << *j << std::endl;
+		}
+	}
 
 	auto item_28143 = items->find(28143);
 	auto q_28143 = item_28143->second.convert_to_vector(features);
@@ -45,12 +57,9 @@ int main(int argc, char const *argv[])
 	std::map<int, float> q_out;
 	q_vec_handler.load(0, &q_out);
 
-	for (auto i = q_out.begin(); i != q_out.end(); ++i)
-	{
-		std::cout << "(" << i->first << ", " << i->second << ')' << std::endl;
-	}
-
 	std::cout << mul_vec(&q_out, &q_out) << std::endl;
+
+
 
     //cleanup
     delete q_28143;

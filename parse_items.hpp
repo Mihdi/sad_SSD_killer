@@ -1,10 +1,11 @@
 #pragma once
-#ifndef PARSE
-#define PARSE
+#ifndef PARSE_ITEMS
+#define PARSE_ITEMS
 #include <fstream>
 
-int parse(
-	const char *file_str, std::map<std::string, Feature> *features,
+int parse_items(
+	const char *file_str,
+	std::map<std::string, Feature> *features,
 	std::unordered_map<int, Item> *items
 ){
 	//open given file
@@ -85,9 +86,11 @@ int parse(
 	file.close();
 
 	//puting last item & getting rid of it
-	items->emplace(current_item->id, *current_item);
+	if(current_item->features.size() > 0){
+		items->emplace(current_item->id, *current_item);
+	}
 	delete current_item;
 	return 0;
 }
 
-#endif //PARSE
+#endif //PARSE_ITEMS
