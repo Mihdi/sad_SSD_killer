@@ -11,6 +11,7 @@
 #include "parse_sessions.hpp"
 #include "mul_vec.hpp"
 #include "vector_handler.hpp"
+#include "compute_r.hpp"
 
 void print_items(std::map<int, Item> *items){
 	for (auto i = items->begin(); i != items->end(); ++i)
@@ -56,6 +57,7 @@ int main(int argc, char const *argv[])
 	p_vec_handler.save(0, p_19);
 
 	//std::cout << mul_vec(&q_out, &q_out) << std::endl;
+	test_compute_r<EPSILON>();
 
     //cleanup
     delete p_19;
