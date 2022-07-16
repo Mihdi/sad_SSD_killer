@@ -23,16 +23,25 @@ public:
 			std::cout << "error, could not open file in VectorHandler.save" << std::endl;
 			::exit(1);
 		}
-		bool skip_mode = false;
-		int prev = 0;
 		for (auto q_i = qvec->begin(); q_i != qvec->end(); q_i++)
 		{
 			const int index = q_i->first;
 			const float component_value = q_i->second;
 			file << 'i' << index;
 			file << 'v' << component_value;
-			prev = index;
 		}
+		file << '\n';
+		file.close();
+	}
+
+	void export_as_csv(std::vector<int> indices){
+		std::ofstream file;
+		file.open(path + ".csv", std::ios::out | std::ios::trunc);
+		if(!file.is_open()){
+			std::cout << "error, could not open file in VectorHandler.export_as_csv" << std::endl;
+			::exit(1);
+		}
+		
 		file << '\n';
 		file.close();
 	}
@@ -42,7 +51,7 @@ public:
 		std::ifstream file;
 		file.open(path + std::to_string(q_index), std::ios::in);
 		if(!file.is_open()){
-			std::cout << "error, could not open file in VectorHandler.load" << std::endl;
+			std::cout << "error, could not open file in VectorHandler.load; path is {" << this->path << q_index << "}" << std::endl;
 			::exit(1);
 		}
 
